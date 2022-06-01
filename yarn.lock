@@ -1444,7 +1444,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.7.6, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.9.2":
+"@babel/runtime@npm:^7.10.2, @babel/runtime@npm:^7.11.2, @babel/runtime@npm:^7.12.5, @babel/runtime@npm:^7.14.6, @babel/runtime@npm:^7.16.3, @babel/runtime@npm:^7.7.6, @babel/runtime@npm:^7.8.4, @babel/runtime@npm:^7.9.2":
   version: 7.18.3
   resolution: "@babel/runtime@npm:7.18.3"
   dependencies:
@@ -6679,6 +6679,8 @@ __metadata:
     formik: ^2.2.9
     react: ^18.1.0
     react-dom: ^18.1.0
+    react-firebase-hooks: ^5.0.3
+    react-loader-spinner: ^6.0.0-0
     react-router-dom: ^6.3.0
     react-scripts: 5.0.1
     styled-components: ^5.3.5
@@ -11000,6 +11002,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-firebase-hooks@npm:^5.0.3":
+  version: 5.0.3
+  resolution: "react-firebase-hooks@npm:5.0.3"
+  peerDependencies:
+    firebase: ">= 9.0.0"
+    react: ">= 16.8.0"
+  checksum: 80e704f1839d44894017d7227dcea8ec02cf5f1b64045de3214a87cfda9b38906765c35ec19657486ca301b251801588cd556c7a8ebbf41eee4d0b0dbadb2eea
+  languageName: node
+  linkType: hard
+
 "react-is@npm:^16.13.1, react-is@npm:^16.7.0":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
@@ -11018,6 +11030,22 @@ __metadata:
   version: 18.1.0
   resolution: "react-is@npm:18.1.0"
   checksum: d206a0fe6790851bff168727bfb896de02c5591695afb0c441163e8630136a3e13ee1a7ddd59fdccddcc93968b4721ae112c10f790b194b03b35a3dc13a355ef
+  languageName: node
+  linkType: hard
+
+"react-loader-spinner@npm:^6.0.0-0":
+  version: 6.0.0-0
+  resolution: "react-loader-spinner@npm:6.0.0-0"
+  dependencies:
+    "@babel/runtime": ^7.14.6
+    prop-types: ^15.8.1
+    styled-components: ^5.3.3
+    styled-tools: ^1.7.2
+    tslib: ^2.3.0
+  peerDependencies:
+    react: ^17.0.2
+    react-dom: ^17.0.2
+  checksum: 69e8da0a089d87e89ff4039ebd31d81896c3a792c91746ae05d42302e51d93bce2f5f32f2d52f6145e3f94f9a05d2a2860a2af95e0b0d23403af74513b99bea2
   languageName: node
   linkType: hard
 
@@ -12192,7 +12220,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"styled-components@npm:^5.3.5":
+"styled-components@npm:^5.3.3, styled-components@npm:^5.3.5":
   version: 5.3.5
   resolution: "styled-components@npm:5.3.5"
   dependencies:
@@ -12211,6 +12239,13 @@ __metadata:
     react-dom: ">= 16.8.0"
     react-is: ">= 16.8.0"
   checksum: 05a664dfe423c2906959a0f3f47f9b1ad630e493eb2e06deea0dc0906af33ba5ca17277b98948a6c9642e73894d6533391aebf45576489f5afe920c974e9f8eb
+  languageName: node
+  linkType: hard
+
+"styled-tools@npm:^1.7.2":
+  version: 1.7.2
+  resolution: "styled-tools@npm:1.7.2"
+  checksum: 00cc1796085589b8d95d5a4183806d45b1d332fbc1dcf19922b01b81bd871c5a499fce64e82bb63bbead5bb8fe317f60a6e91c2fe01bf1ed79f5953977a05065
   languageName: node
   linkType: hard
 
@@ -12591,7 +12626,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.3, tslib@npm:^2.1.0":
+"tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.3.0":
   version: 2.4.0
   resolution: "tslib@npm:2.4.0"
   checksum: 8c4aa6a3c5a754bf76aefc38026134180c053b7bd2f81338cb5e5ebf96fefa0f417bff221592bf801077f5bf990562f6264fecbc42cd3309b33872cb6fc3b113
