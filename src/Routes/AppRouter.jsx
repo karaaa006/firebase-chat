@@ -4,13 +4,10 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { Context } from "../index.js";
 import { LOGIN_ROUTE, MAIN_ROUTE } from "../utils/consts";
 import { privateRoutes, publicRoutes } from "./Routes";
-import { Loader } from "../components/Reuseble/Loader.js";
 
 export const AppRouter = () => {
   const { auth } = useContext(Context);
-  const [user, loading, error] = useAuthState(auth);
-
-  if (loading) return <Loader />;
+  const [user] = useAuthState(auth);
 
   return user ? (
     <Routes>

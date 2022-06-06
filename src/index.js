@@ -2,6 +2,7 @@ import React, { createContext } from "react";
 import ReactDOM from "react-dom/client";
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
+import { getFirestore, collection, getDocs } from "firebase/firestore/lite";
 import { BrowserRouter } from "react-router-dom";
 import "./index.css";
 
@@ -18,10 +19,11 @@ const firebaseConfig = {
 };
 
 export const Context = createContext(null);
-
+// emoji user ID
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
+const db = getFirestore();
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -29,6 +31,7 @@ root.render(
     value={{
       auth,
       app,
+      db,
     }}
   >
     <React.StrictMode>
