@@ -1,7 +1,12 @@
 import { signOut } from "firebase/auth";
-import { useContext } from "react";
+import { collection, getFirestore, query, where } from "firebase/firestore";
+import { useContext, useState } from "react";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 import styled from "styled-components";
-import { Context } from "../..";
+import { Context } from "../../App";
+import { Button } from "../Reuseble/Button";
+import { Popup } from "../Reuseble/Popup";
+import { AddChatPopup } from "./AddChatPopup";
 import { ChatList } from "./ChatList";
 
 const StyledSideBar = styled.div`
@@ -10,53 +15,51 @@ const StyledSideBar = styled.div`
   flex-direction: column;
 `;
 
-const Button = styled.button`
-  width: fit-content;
-  padding: 15px 30px;
-  border: none;
+const ButtonList = styled.div`
+  display: flex;
+  justify-content: space-between;
 
-  background-color: #fff;
+  gap: 10px;
+`;
 
-  cursor: pointer;
+const PopupWrap = styled.div`
+  position: relative;
 `;
 
 export const SideBar = () => {
-  const chatList = [
-    {
-      id: 1,
-      name: "Oleh Karaulnyi",
-      newMessageCount: 2,
-      lastMessage: "Lorem ipsum Lorem ipsum Lorem ipsum...",
-    },
-    {
-      id: 2,
-      name: "Vitalina",
-      newMessageCount: 1,
-      lastMessage: "Lorem ipsum Lorem ipsum Lorem ipsum...",
-    },
-    {
-      id: 3,
-      name: "Makar",
-      newMessageCount: 0,
-      lastMessage: "Lorem ipsum Lorem ipsum Lorem ipsum...",
-    },
-    {
-      id: 4,
-      name: "Vitya",
-      newMessageCount: 0,
-      lastMessage: "Lorem ipsum Lorem ipsum Lorem ipsum...",
-    },
-  ];
+  const [popupIsShown, setPopupIsShown] = useState(false);
 
-  const { auth } = useContext(Context);
+  const db = getFirestore();
+
+  const { auth, setCurrentChat } = useContext(Context);
+
+  const chatsRef = collection(db, "chats");
+
+  const q = query(
+    chatsRef,
+    where("users", "array-contains", auth.currentUser.uid)
+  );
+
+  const [chatList, loading] = useCollectionData(q);
 
   const handleLogout = () => {
     signOut(auth);
+    setCurrentChat("");
+  };
+
+  const handleAddChat = () => {
+    setPopupIsShown(!popupIsShown);
   };
   return (
     <StyledSideBar>
       <ChatList chatList={chatList} />
-      <Button onClick={handleLogout}>Logout</Button>
+      <ButtonList>
+        <Button onClick={handleLogout}>Logout</Button>
+        <PopupWrap>
+          <AddChatPopup isShown={popupIsShown} />
+          <Button onClick={handleAddChat}>Add chat</Button>
+        </PopupWrap>
+      </ButtonList>
     </StyledSideBar>
   );
 };

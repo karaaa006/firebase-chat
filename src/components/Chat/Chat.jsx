@@ -1,31 +1,34 @@
-import { addDoc } from "firebase/firestore/lite";
-import {
-  useDocumentData,
-  useDocument,
-  useCollectionData,
-} from "react-firebase-hooks/firestore";
+import { useDocumentData } from "react-firebase-hooks/firestore";
 import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
-import { Context } from "../..";
+import { Context } from "../../App";
 import { v4 as uuidv4 } from "uuid";
-import {
-  getFirestore,
-  collection,
-  doc,
-  arrayUnion,
-  updateDoc,
-  query,
-  where,
-} from "firebase/firestore";
+import { getFirestore, doc, arrayUnion, updateDoc } from "firebase/firestore";
 import { Message } from "./Message";
 import { scrollBottom } from "../../utils/utils";
+import { Input } from "../Reuseble/Input";
+import { Button } from "../Reuseble/Button";
 
 const Wrap = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 
   width: 700px;
   max-height: 100%;
+`;
+
+const ChatInfoWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+`;
+
+const ChatInfo = styled.div`
+  display: flex;
+  justify-content: end;
+
+  padding-bottom: 20px;
 `;
 
 const Messages = styled.div`
@@ -35,19 +38,26 @@ const Messages = styled.div`
   max-height: 100%;
 
   gap: 15px;
-  padding: 15px 0;
+  padding-right: 15px;
+  padding-bottom: 15px;
+  margin-bottom: 15px;
 
   overflow: auto;
 `;
 
-export const Chat = ({ chatId }) => {
-  const { auth } = useContext(Context);
+const Form = styled.form`
+  display: flex;
+  gap: 15px;
+`;
+
+export const Chat = () => {
+  const { auth, currentChat } = useContext(Context);
 
   const [value, setValue] = useState("");
 
   const db = getFirestore();
 
-  const [chatInfo, loading] = useDocumentData(doc(db, "chats", chatId));
+  const [chatInfo, loading] = useDocumentData(doc(db, "chats", currentChat));
 
   useEffect(() => {
     scrollBottom(Messages);
@@ -55,7 +65,7 @@ export const Chat = ({ chatId }) => {
 
   const handleSend = async () => {
     try {
-      const chatRef = doc(db, "chats", chatId);
+      const chatRef = doc(db, "chats", currentChat);
 
       await updateDoc(chatRef, {
         messages: arrayUnion({
@@ -72,21 +82,31 @@ export const Chat = ({ chatId }) => {
 
   return (
     <Wrap>
-      <Messages>
-        {chatInfo?.messages?.map((item) => (
-          <Message
-            key={item.id}
-            currentUser={auth.currentUser.uid}
-            likes={item.likes}
-            senderId={item.senderId}
-            text={item.message}
-          >
-            {item.message}
-          </Message>
-        ))}
-      </Messages>
-      <textarea onChange={(e) => setValue(e.target.value)} />
-      <button onClick={handleSend}>Send</button>
+      <ChatInfoWrap>
+        <ChatInfo>Chat ID: {currentChat}</ChatInfo>
+        <Messages>
+          {chatInfo?.messages?.map((item) => (
+            <Message
+              key={item.id}
+              currentUser={auth.currentUser.uid}
+              likes={item.likes}
+              senderId={item.senderId}
+              text={item.message}
+            >
+              {item.message}
+            </Message>
+          ))}
+        </Messages>
+      </ChatInfoWrap>
+      <Form>
+        <Input
+          value={value}
+          setValue={setValue}
+          placeholder="Your message"
+          w="100%"
+        />
+        <Button onClick={handleSend}>Send</Button>
+      </Form>
     </Wrap>
   );
 };

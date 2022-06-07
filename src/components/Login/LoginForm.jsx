@@ -2,7 +2,7 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { doc, getFirestore, setDoc } from "firebase/firestore";
 import { useContext } from "react";
 import styled from "styled-components";
-import { Context } from "../../index.js";
+import { Context } from "../../App";
 import { GoogleAuthButton } from "./GoogleAuthButton";
 
 const StyledForm = styled.form`
@@ -17,8 +17,9 @@ const StyledForm = styled.form`
   max-height: 100%;
 
   border-radius: 5px;
-  background-color: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(5px);
+
+  box-shadow: 2px 2px 7px 0px #aeaec066, -2px -2px 7px 0px #ffffff;
+  background-color: #f0f0f3;
 `;
 
 const Title = styled.h1`
@@ -26,7 +27,7 @@ const Title = styled.h1`
 
   font-size: 32px;
 
-  color: rgba(0, 0, 100, 0.7);
+  color: #fb7575;
 `;
 
 export const LoginForm = () => {
@@ -38,7 +39,6 @@ export const LoginForm = () => {
 
     try {
       const credential = await signInWithPopup(auth, provider);
-      console.log(credential);
       const userRef = doc(getFirestore(), "users", credential.user.uid);
 
       await setDoc(
@@ -57,7 +57,7 @@ export const LoginForm = () => {
 
   return (
     <StyledForm>
-      <Title>LightChat</Title>
+      <Title>Noname Chat</Title>
       <GoogleAuthButton onClick={handleLogin} />
     </StyledForm>
   );

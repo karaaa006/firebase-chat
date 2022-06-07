@@ -9,8 +9,9 @@ const Wrap = styled.div`
   height: 100vh;
 
   padding: 30px 15px;
+  background-color: #f0f0f3;
 
-  background: linear-gradient(to right, #e0eafc, #cfdef3);
+  /* background: linear-gradient(to right, #e0eafc, #cfdef3); */
 `;
 
 export const Layout = ({ children }) => {

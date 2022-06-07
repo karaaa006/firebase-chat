@@ -2,16 +2,15 @@ import styled from "styled-components";
 
 const Wrap = styled.div`
   display: flex;
-  /* justify-content: center; */
-  /* align-items: center; */
 
-  max-height: 100%;
+  height: 100%;
 
+  gap: 10px;
   padding: 25px;
   border-radius: 5px;
 
-  background-color: rgba(255, 255, 255, 0.4);
-  backdrop-filter: blur(5px);
+  box-shadow: 2px 2px 7px 0px #aeaec066, -2px -2px 7px 0px #ffffff;
+  background-color: #f0f0f3;
 `;
 
 export const ChatContainer = ({ children }) => {

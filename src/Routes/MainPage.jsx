@@ -1,15 +1,17 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { Context } from "../App";
 import { Chat } from "../components/Chat/Chat";
 import { ChatContainer } from "../components/Chat/ChatContainer";
+import { NoChat } from "../components/Chat/NoChat";
 import { SideBar } from "../components/Chat/SideBar";
 
 export const MainPage = () => {
-  const [activeChatId, setActiveChatId] = useState("JKjXJBxdnzAZLmXgysfP");
+  const { currentChat } = useContext(Context);
 
   return (
     <ChatContainer>
-      <SideBar activeChatId={activeChatId} setActiveChatId={setActiveChatId} />
-      <Chat chatId={activeChatId} />
+      <SideBar />
+      {currentChat ? <Chat /> : <NoChat />}
     </ChatContainer>
   );
 };

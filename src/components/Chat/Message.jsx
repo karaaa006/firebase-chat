@@ -14,10 +14,12 @@ const Sender = styled.div`
   display: flex;
   flex-direction: ${({ currentUser }) =>
     currentUser ? "row-reverse" : "unset"};
+  align-items: center;
 
   gap: 10px;
-
   padding: 10px;
+
+  font-size: 12px;
 `;
 
 const Photo = styled.img`
@@ -27,14 +29,15 @@ const Photo = styled.img`
 `;
 
 const Name = styled.div``;
-const Email = styled.div``;
 
 const StyledMessage = styled.div`
   padding: 15px 25px;
   border-radius: ${({ currentUser }) =>
-    currentUser ? "50px 50px 15px 50px" : "15px 50px 50px 50px"};
+    currentUser ? "50px 15px 50px  50px" : "15px 50px 50px 50px"};
 
-  background-color: #fff;
+  color: #fb7575;
+  background-color: #f0f0f3;
+  box-shadow: 2px 2px 7px 0px #aeaec066, -2px -2px 7px 0px #ffffff;
 `;
 
 export const Message = ({ text, senderId, currentUser, likes }) => {
@@ -49,7 +52,6 @@ export const Message = ({ text, senderId, currentUser, likes }) => {
           <Photo src={senderInfo?.photo} alt={senderInfo?.name} />
         )}
         <Name>{senderInfo?.name}</Name>
-        <Email>{senderInfo?.email}</Email>
       </Sender>
       <StyledMessage currentUser={senderId === currentUser}>
         {text}
