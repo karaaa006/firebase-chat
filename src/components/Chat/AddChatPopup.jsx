@@ -55,7 +55,7 @@ export const AddChatPopup = ({ isShown, setIsShown }) => {
   };
 
   return (
-    <Popup isShown={isShown}>
+    <Popup isShown={isShown} setIsShown={setIsShown}>
       <Wrap>
         <SubscribeWrap>
           <Input

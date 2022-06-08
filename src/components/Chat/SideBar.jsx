@@ -15,6 +15,22 @@ const StyledSideBar = styled.div`
   flex-direction: column;
 `;
 
+const BottomWrap = styled.div``;
+const UserInfo = styled.div`
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+  margin-bottom: 15px;
+`;
+
+const UserPhoto = styled.img`
+  width: 40px;
+  height: 40px;
+
+  border-radius: 50px;
+`;
+
 const ButtonList = styled.div`
   display: flex;
   justify-content: space-between;
@@ -46,6 +62,7 @@ export const SideBar = () => {
     signOut(auth);
     setCurrentChat("");
   };
+  console.log(auth);
 
   const handleAddChat = () => {
     setPopupIsShown(!popupIsShown);
@@ -53,13 +70,19 @@ export const SideBar = () => {
   return (
     <StyledSideBar>
       <ChatList chatList={chatList} />
-      <ButtonList>
-        <Button onClick={handleLogout}>Logout</Button>
-        <PopupWrap>
-          <AddChatPopup isShown={popupIsShown} />
-          <Button onClick={handleAddChat}>Add chat</Button>
-        </PopupWrap>
-      </ButtonList>
+      <BottomWrap>
+        <UserInfo>
+          <UserPhoto src={auth?.currentUser?.photoURL} />
+          {auth?.currentUser?.displayName}
+        </UserInfo>
+        <ButtonList>
+          <Button onClick={handleLogout}>Logout</Button>
+          <PopupWrap>
+            <AddChatPopup isShown={popupIsShown} setIsShown={setPopupIsShown} />
+            <Button onClick={handleAddChat}>Add chat</Button>
+          </PopupWrap>
+        </ButtonList>
+      </BottomWrap>
     </StyledSideBar>
   );
 };

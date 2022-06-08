@@ -8,6 +8,9 @@ import { Message } from "./Message";
 import { scrollBottom } from "../../utils/utils";
 import { Input } from "../Reuseble/Input";
 import { Button } from "../Reuseble/Button";
+import { IconButton } from "../Reuseble/IconButton";
+import { EditIcon } from "../Reuseble/svgs/EditIcon";
+import { RenameChatPopup } from "./RenameChatPopup";
 
 const Wrap = styled.div`
   display: flex;
@@ -22,6 +25,18 @@ const ChatInfoWrap = styled.div`
   display: flex;
   flex-direction: column;
   overflow: hidden;
+
+  height: 100%;
+`;
+
+const StyledEditIcon = styled(EditIcon)`
+  margin-right: 5px;
+
+  opacity: 0;
+
+  cursor: pointer;
+
+  transition: opacity 250ms ease;
 `;
 
 const ChatInfo = styled.div`
@@ -29,6 +44,16 @@ const ChatInfo = styled.div`
   justify-content: end;
 
   padding-bottom: 20px;
+
+  :hover {
+    ${StyledEditIcon} {
+      opacity: 1;
+    }
+  }
+`;
+
+const EditingBlock = styled.div`
+  position: relative;
 `;
 
 const Messages = styled.div`
@@ -53,17 +78,22 @@ const Form = styled.form`
 export const Chat = () => {
   const { auth, currentChat } = useContext(Context);
 
-  const [value, setValue] = useState("");
-
   const db = getFirestore();
 
   const [chatInfo, loading] = useDocumentData(doc(db, "chats", currentChat));
 
+  const [value, setValue] = useState("");
+  const [editPopupIsOpen, setEditPopupIsOpen] = useState(false);
+  const [chatName, setChatName] = useState("");
+
   useEffect(() => {
     scrollBottom(Messages);
+    setChatName(chatInfo?.name);
   }, [chatInfo]);
 
-  const handleSend = async () => {
+  const handleSend = async (e) => {
+    e.preventDefault();
+
     try {
       const chatRef = doc(db, "chats", currentChat);
 
@@ -75,6 +105,8 @@ export const Chat = () => {
           senderId: auth.currentUser.uid,
         }),
       });
+
+      setValue("");
     } catch (e) {
       console.error("Error adding document: ", e);
     }
@@ -83,7 +115,23 @@ export const Chat = () => {
   return (
     <Wrap>
       <ChatInfoWrap>
-        <ChatInfo>Chat ID: {currentChat}</ChatInfo>
+        <ChatInfo>
+          <EditingBlock>
+            <StyledEditIcon
+              width="20px"
+              height="20px"
+              onClick={() => setEditPopupIsOpen(!editPopupIsOpen)}
+            />
+            <RenameChatPopup
+              chatName={chatName}
+              setChatName={setChatName}
+              isShown={editPopupIsOpen}
+              setIsShown={setEditPopupIsOpen}
+              chatId={currentChat}
+            />
+          </EditingBlock>
+          {chatInfo?.name}
+        </ChatInfo>
         <Messages>
           {chatInfo?.messages?.map((item) => (
             <Message
@@ -98,14 +146,14 @@ export const Chat = () => {
           ))}
         </Messages>
       </ChatInfoWrap>
-      <Form>
+      <Form onSubmit={handleSend}>
         <Input
           value={value}
           setValue={setValue}
           placeholder="Your message"
           w="100%"
         />
-        <Button onClick={handleSend}>Send</Button>
+        <Button type="submit">Send</Button>
       </Form>
     </Wrap>
   );
