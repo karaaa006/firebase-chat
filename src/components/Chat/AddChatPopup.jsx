@@ -13,6 +13,7 @@ import { Context } from "../../App";
 import { Button } from "../Reuseble/Button";
 import { Input } from "../Reuseble/Input";
 import { Popup } from "../Reuseble/Popup";
+import { FiPlus } from "react-icons/fi";
 
 const Wrap = styled.div``;
 
@@ -65,7 +66,7 @@ export const AddChatPopup = ({ isShown, setIsShown }) => {
             w="200px"
           />
           <Button w="50px" h="50px" p="0" onClick={handleSubscribeChatClick}>
-            +
+            <FiPlus />
           </Button>
         </SubscribeWrap>
         <Button w="100%" onClick={handleCreateChatClick}>

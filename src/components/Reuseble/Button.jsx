@@ -17,6 +17,17 @@ const StyledButton = styled.button`
   box-shadow: 2px 2px 7px 0px #aeaec066, -2px -2px 7px 0px #ffffff;
 
   cursor: pointer;
+
+  transition: background-color 250ms ease, box-shadow 250ms ease;
+
+  :hover {
+    background-color: #ece9e9;
+  }
+
+  :active {
+    box-shadow: 0px 0px 0px 0px #aeaec066, 0px 0px 0px 0px #ffffff,
+      2px 2px 7px 0px #aeaec066 inset, -2px -2px 7px 0px #ffffff inset;
+  }
 `;
 export const Button = ({ children, onClick, type, w, h, p }) => {
   return (

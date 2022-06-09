@@ -1,18 +1,10 @@
-import {
-  addDoc,
-  arrayUnion,
-  collection,
-  doc,
-  getFirestore,
-  setDoc,
-  updateDoc,
-} from "firebase/firestore";
-import { useContext, useState } from "react";
+import { doc, getFirestore, setDoc } from "firebase/firestore";
+import { useState } from "react";
 import styled from "styled-components";
-import { Context } from "../../App";
 import { Button } from "../Reuseble/Button";
 import { Input } from "../Reuseble/Input";
 import { Popup } from "../Reuseble/Popup";
+import { FiCheck } from "react-icons/fi";
 
 const Wrap = styled.div``;
 
@@ -50,7 +42,7 @@ export const RenameChatPopup = ({ isShown, setIsShown, chatId }) => {
             w="200px"
           />
           <Button w="50px" h="50px" p="0" onClick={handleNameChangeClick}>
-            OK
+            <FiCheck />
           </Button>
         </SubscribeWrap>
       </Wrap>

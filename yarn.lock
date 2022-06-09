@@ -6680,6 +6680,7 @@ __metadata:
     react: ^18.1.0
     react-dom: ^18.1.0
     react-firebase-hooks: ^5.0.3
+    react-icons: ^4.4.0
     react-loader-spinner: ^6.0.0-0
     react-router-dom: ^6.3.0
     react-scripts: 5.0.1
@@ -11010,6 +11011,15 @@ __metadata:
     firebase: ">= 9.0.0"
     react: ">= 16.8.0"
   checksum: 80e704f1839d44894017d7227dcea8ec02cf5f1b64045de3214a87cfda9b38906765c35ec19657486ca301b251801588cd556c7a8ebbf41eee4d0b0dbadb2eea
+  languageName: node
+  linkType: hard
+
+"react-icons@npm:^4.4.0":
+  version: 4.4.0
+  resolution: "react-icons@npm:4.4.0"
+  peerDependencies:
+    react: "*"
+  checksum: dd93a1dcc8ac8a3cf46a2b33e80b586fa967331fa5fcb90d061abf276155a8363a331643e203d67cb9bab4261d00a757da854bcce1fce2c6e4258bf3e33f711b
   languageName: node
   linkType: hard
 

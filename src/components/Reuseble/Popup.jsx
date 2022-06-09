@@ -8,6 +8,7 @@ const StyledPopup = styled.div`
   bottom: ${({ pos }) => (pos === "top" ? "calc(100% + 12px)" : "unset")};
   top: ${({ pos }) => (pos === "bottom" ? "calc(100% + 12px)" : "unset")};
   transform: translateX(-50%);
+  z-index: 1;
 
   padding: 15px;
   border-radius: 5px;
