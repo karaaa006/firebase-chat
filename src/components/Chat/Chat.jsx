@@ -1,22 +1,39 @@
-import { useDocumentData } from "react-firebase-hooks/firestore";
+import {
+  useCollectionData,
+  useDocumentData,
+} from "react-firebase-hooks/firestore";
 import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { Context } from "../../App";
-import { v4 as uuidv4 } from "uuid";
-import { getFirestore, doc, arrayUnion, updateDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  doc,
+  collection,
+  addDoc,
+  setDoc,
+  serverTimestamp,
+  query,
+  orderBy,
+} from "firebase/firestore";
 import { Message } from "./Message";
 import { scrollBottom } from "../../utils/utils";
 import { Input } from "../Reuseble/Input";
 import { Button } from "../Reuseble/Button";
 import { RenameChatPopup } from "./RenameChatPopup";
-import { FiEdit2, FiSend, FiCopy, FiCheck } from "react-icons/fi";
+import {
+  FiEdit2,
+  FiSend,
+  FiCopy,
+  FiCheck,
+  FiAlignJustify,
+} from "react-icons/fi";
 
 const Wrap = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: space-between;
 
-  width: 700px;
+  width: 100%;
   max-height: 100%;
 `;
 
@@ -58,6 +75,22 @@ const StyledCheckIcon = styled(FiCheck)`
   transition: opacity 250ms ease;
 `;
 
+const StyledMenuIcon = styled(FiAlignJustify)`
+  display: none;
+
+  width: 25px;
+  height: 25px;
+
+  :hover,
+  :focus {
+    stroke: #fb7575;
+  }
+
+  @media only screen and (max-width: 768px) {
+    display: block;
+  } ;
+`;
+
 const ChatInfo = styled.div`
   display: flex;
   justify-content: space-between;
@@ -80,13 +113,15 @@ const ChatId = styled.div`
 `;
 
 const ChatName = styled.div`
+  position: relative;
+
   display: flex;
   align-items: center;
   white-space: nowrap;
-`;
 
-const EditingBlock = styled.div`
-  position: relative;
+  @media only screen and (max-width: 960px) {
+    display: none;
+  } ;
 `;
 
 const Messages = styled.div`
@@ -114,11 +149,18 @@ const StyledFiSend = styled(FiSend)`
 `;
 
 export const Chat = () => {
-  const { auth, currentChat } = useContext(Context);
+  const { auth, currentChat, setMobileMenuIsOpen } = useContext(Context);
 
   const db = getFirestore();
 
   const [chatInfo, loading] = useDocumentData(doc(db, "chats", currentChat));
+
+  const q = query(
+    collection(db, `chats/${currentChat}`, "messages"),
+    orderBy("timestamp")
+  );
+
+  const [messageList, loadingMessageList] = useCollectionData(q);
 
   const [value, setValue] = useState("");
   const [editPopupIsOpen, setEditPopupIsOpen] = useState(false);
@@ -132,7 +174,7 @@ export const Chat = () => {
     return () => setIdIsCopied(false);
   }, [chatInfo]);
 
-  const handleCopiIdClick = (id) => {
+  const handleCopyIdClick = (id) => {
     navigator.clipboard.writeText(id);
 
     setIdIsCopied(true);
@@ -142,22 +184,24 @@ export const Chat = () => {
     e.preventDefault();
 
     try {
-      const chatRef = doc(db, "chats", currentChat);
-
       if (value.trim() !== "") {
-        await updateDoc(chatRef, {
-          messages: arrayUnion({
-            id: uuidv4(),
+        const docRef = await addDoc(
+          collection(db, `chats/${currentChat}`, "messages"),
+          {
             likes: [],
             message: value,
             senderId: auth.currentUser.uid,
-          }),
-        });
+            type: "text",
+            timestamp: serverTimestamp(),
+          }
+        );
+
+        await setDoc(docRef, { id: docRef.id }, { merge: true });
 
         setValue("");
       }
     } catch (e) {
-      console.error("Error adding document: ", e);
+      console.error("Error: ", e);
     }
   };
 
@@ -165,38 +209,43 @@ export const Chat = () => {
     <Wrap>
       <ChatInfoWrap>
         <ChatInfo>
+          <StyledMenuIcon
+            onClick={() => {
+              setMobileMenuIsOpen(true);
+            }}
+          />
           <ChatId>
             Chat ID: {chatInfo?.id}{" "}
             {idIsCopied ? (
               <StyledCheckIcon />
             ) : (
-              <StyledCopyIcon onClick={() => handleCopiIdClick(chatInfo?.id)} />
+              <StyledCopyIcon onClick={() => handleCopyIdClick(chatInfo?.id)} />
             )}
           </ChatId>
           <ChatName>
-            <EditingBlock>
-              <StyledEditIcon
-                onClick={() => setEditPopupIsOpen(!editPopupIsOpen)}
-              />
-              <RenameChatPopup
-                chatName={chatName}
-                setChatName={setChatName}
-                isShown={editPopupIsOpen}
-                setIsShown={setEditPopupIsOpen}
-                chatId={currentChat}
-              />
-            </EditingBlock>
+            <StyledEditIcon
+              onClick={() => setEditPopupIsOpen(!editPopupIsOpen)}
+            />
             {chatInfo?.name}
+            <RenameChatPopup
+              chatName={chatName}
+              setChatName={setChatName}
+              isShown={editPopupIsOpen}
+              setIsShown={setEditPopupIsOpen}
+              chatId={currentChat}
+            />
           </ChatName>
         </ChatInfo>
         <Messages>
-          {chatInfo?.messages?.map((item) => (
+          {messageList?.map((item) => (
             <Message
               key={item.id}
               currentUser={auth.currentUser.uid}
               likes={item.likes}
               senderId={item.senderId}
               text={item.message}
+              type={item.type}
+              id={item.id}
             >
               {item.message}
             </Message>

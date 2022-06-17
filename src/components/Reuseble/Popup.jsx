@@ -4,10 +4,32 @@ import { useOnClickOutside } from "../../hooks/useOnClickOutside";
 
 const StyledPopup = styled.div`
   position: absolute;
-  left: 50%;
-  bottom: ${({ pos }) => (pos === "top" ? "calc(100% + 12px)" : "unset")};
-  top: ${({ pos }) => (pos === "bottom" ? "calc(100% + 12px)" : "unset")};
-  transform: translateX(-50%);
+  /* bottom: ${({ pos }) => (pos === "top" ? "calc(100% + 12px)" : "unset")};
+  top: ${({ pos }) => (pos === "bottom" ? "calc(100% + 12px)" : "unset")}; */
+  /* transform: translateX(-50%); */
+  /* bottom right */
+
+  ${({ pos }) =>
+    pos === "bottom"
+      ? `
+          top: calc(100% + 12px);
+          left: 50%;
+          transform: translateX(-50%);
+        `
+      : pos === "top"
+      ? `
+          bottom: calc(100% + 12px);
+          left: 50%;
+          transform: translateX(-50%);
+
+        `
+      : pos === "bottom right"
+      ? `
+          top: calc(100% + 12px);
+          right: calc(0% + 5px);
+        `
+      : ""}
+
   z-index: 1;
 
   padding: 15px;

@@ -20,14 +20,13 @@ const firebaseConfig = {
 };
 
 export const Context = createContext(null);
-// emoji user ID
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const db = getFirestore();
 
 function App() {
   const [currentChat, setCurrentChat] = useState("");
+  const [mobileMenuIsOpen, setMobileMenuIsOpen] = useState(false);
   const [user, loading] = useAuthState(auth);
 
   if (loading) return <Loader />;
@@ -41,6 +40,8 @@ function App() {
 
         currentChat,
         setCurrentChat,
+        mobileMenuIsOpen,
+        setMobileMenuIsOpen,
       }}
     >
       <Layout>

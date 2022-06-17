@@ -1,6 +1,9 @@
+body{
+  background-color: #f0f0f3;
+}
+
 .App {
   text-align: center;
 
-  /* background: #BA5370;  
-  background: linear-gradient(to right, #F4E2D8, #BA5370); */
+  background-color: #f0f0f3;
 }

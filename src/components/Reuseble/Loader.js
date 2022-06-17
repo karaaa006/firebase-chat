@@ -18,7 +18,7 @@ export const Loader = () => {
         width={100}
         strokeWidth={10}
         strokeWidthSecondary={10}
-        color="tomato"
+        color="#fb7575"
         secondaryColor="transparent"
       />
     </LoaderWrap>

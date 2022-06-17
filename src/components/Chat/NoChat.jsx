@@ -1,4 +1,6 @@
+import { useContext } from "react";
 import styled from "styled-components";
+import { Context } from "../../App";
 
 const Wrap = styled.div`
   display: flex;
@@ -10,5 +12,11 @@ const Wrap = styled.div`
 `;
 
 export const NoChat = () => {
-  return <Wrap>Select chat</Wrap>;
+  const { setMobileMenuIsOpen } = useContext(Context);
+
+  return (
+    <Wrap>
+      <div onClick={() => setMobileMenuIsOpen(true)}>Select chat</div>
+    </Wrap>
+  );
 };

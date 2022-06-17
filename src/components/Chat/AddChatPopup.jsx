@@ -32,7 +32,6 @@ export const AddChatPopup = ({ isShown, setIsShown }) => {
 
   const handleCreateChatClick = async () => {
     const chatRef = await addDoc(collection(db, "chats"), {
-      messages: [],
       users: [auth.currentUser.uid],
     });
 

@@ -1,11 +1,11 @@
 import { signOut } from "firebase/auth";
 import { collection, getFirestore, query, where } from "firebase/firestore";
-import { useContext, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { useCollectionData } from "react-firebase-hooks/firestore";
 import styled from "styled-components";
 import { Context } from "../../App";
+import { useOnClickOutside } from "../../hooks/useOnClickOutside";
 import { Button } from "../Reuseble/Button";
-import { Popup } from "../Reuseble/Popup";
 import { AddChatPopup } from "./AddChatPopup";
 import { ChatList } from "./ChatList";
 
@@ -13,6 +13,26 @@ const StyledSideBar = styled.div`
   display: flex;
   justify-content: space-between;
   flex-direction: column;
+
+  height: 100%;
+
+  background-color: #f0f0f3;
+
+  transition: transform ease 250ms, box-shadow ease 250ms;
+
+  @media only screen and (max-width: 768px) {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: ${({ isOpen }) =>
+      isOpen ? "translateX(0%)" : "translateX(-100%)"};
+
+    padding: 25px;
+    z-index: 1;
+
+    box-shadow: ${({ isOpen }) =>
+      isOpen ? "2px 0 10px rgba(0, 0, 0, 0.1)" : "none"};
+  } ;
 `;
 
 const BottomWrap = styled.div``;
@@ -43,11 +63,16 @@ const PopupWrap = styled.div`
 `;
 
 export const SideBar = () => {
+  const sideBarRef = useRef(null);
+
   const [popupIsShown, setPopupIsShown] = useState(false);
 
   const db = getFirestore();
 
-  const { auth, setCurrentChat } = useContext(Context);
+  const { auth, setCurrentChat, mobileMenuIsOpen, setMobileMenuIsOpen } =
+    useContext(Context);
+
+  useOnClickOutside(sideBarRef, () => setMobileMenuIsOpen(false));
 
   const chatsRef = collection(db, "chats");
 
@@ -62,13 +87,12 @@ export const SideBar = () => {
     signOut(auth);
     setCurrentChat("");
   };
-  console.log(auth);
 
   const handleAddChat = () => {
     setPopupIsShown(!popupIsShown);
   };
   return (
-    <StyledSideBar>
+    <StyledSideBar isOpen={mobileMenuIsOpen} ref={sideBarRef}>
       <ChatList chatList={chatList} />
       <BottomWrap>
         <UserInfo>

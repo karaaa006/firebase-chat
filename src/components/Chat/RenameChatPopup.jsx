@@ -32,7 +32,7 @@ export const RenameChatPopup = ({ isShown, setIsShown, chatId }) => {
   };
 
   return (
-    <Popup isShown={isShown} setIsShown={setIsShown} pos="bottom">
+    <Popup isShown={isShown} setIsShown={setIsShown} pos="bottom right">
       <Wrap>
         <SubscribeWrap>
           <Input

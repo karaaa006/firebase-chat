@@ -1,11 +1,21 @@
-import { doc, getFirestore } from "firebase/firestore";
+import { arrayUnion, doc, getFirestore, updateDoc } from "firebase/firestore";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import styled from "styled-components";
 import { FiHeart } from "react-icons/fi";
+import { Context } from "../../App";
+import { useContext } from "react";
 
 const Wrap = styled.div`
   align-self: ${({ currentUser }) => (currentUser ? "end" : "start")};
-  max-width: 60%;
+  max-width: 70%;
+
+  @media only screen and (max-width: 960px) {
+    max-width: 85%;
+  }
+
+  @media only screen and (max-width: 768px) {
+    max-width: 95%;
+  } ;
 `;
 
 const Sender = styled.div`
@@ -61,6 +71,10 @@ const MessageWrap = styled.div`
 `;
 
 const StyledMessage = styled.div`
+  position: relative;
+
+  width: 100%;
+
   padding: 15px 25px;
   border-radius: ${({ currentUser }) =>
     currentUser ? "50px 15px 50px  50px" : "15px 50px 50px 50px"};
@@ -68,18 +82,56 @@ const StyledMessage = styled.div`
   color: #fb7575;
   background-color: #f0f0f3;
   box-shadow: 2px 2px 7px 0px #aeaec066, -2px -2px 7px 0px #ffffff;
+
+  word-wrap: break-word;
 `;
 
 const LikesCounter = styled.div`
-  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  width: 50px;
+  min-width: 50px;
+  height: 25px;
+
+  background-color: #fb7575;
+  color: #ffffff;
+  border-radius: 50px;
+
+  line-height: 0.5;
 `;
 
-export const Message = ({ text, senderId, currentUser, likes }) => {
+export const Message = ({ id, text, senderId, currentUser, likes }) => {
+  const { auth, currentChat } = useContext(Context);
+
   const [senderInfo, loading] = useDocumentData(
     doc(getFirestore(), "users", senderId)
   );
 
-  const likes1 = ["dsfdsf", "sdfdsfewf"];
+  const handleLikeClick = async () => {
+    try {
+      const messageRef = doc(
+        getFirestore(),
+        `chats/${currentChat}/messages`,
+        id
+      );
+
+      if (likes.includes(currentUser)) {
+        const updatedLikeList = likes.filter((item) => item !== currentUser);
+
+        await updateDoc(messageRef, {
+          likes: updatedLikeList,
+        });
+      } else {
+        await updateDoc(messageRef, {
+          likes: arrayUnion(auth.currentUser.uid),
+        });
+      }
+    } catch (e) {
+      console.error("Error: ", e);
+    }
+  };
 
   return (
     <Wrap currentUser={senderId === currentUser}>
@@ -90,12 +142,19 @@ export const Message = ({ text, senderId, currentUser, likes }) => {
         <Name>{senderInfo?.name}</Name>
       </Sender>
       <MessageWrap currentUser={senderId === currentUser}>
-        <StyledHeartIcon />
+        <StyledHeartIcon
+          fill={likes.includes(currentUser) ? "#fb7575" : "none"}
+          stroke="#fb7575"
+          onClick={handleLikeClick}
+        />
+        {!!likes?.length && (
+          <LikesCounter currentUser={senderId === currentUser}>
+            {likes?.length}
+          </LikesCounter>
+        )}
         <StyledMessage currentUser={senderId === currentUser}>
           {text}
         </StyledMessage>
-
-        {/* <LikesCounter>{likes1.length}</LikesCounter> */}
       </MessageWrap>
     </Wrap>
   );
